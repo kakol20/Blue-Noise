@@ -157,9 +157,11 @@
   <ItemGroup>
     <ClCompile Include="src\misc\Random.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\misc\String.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\misc\Random.h" />
+    <ClInclude Include="src\misc\String.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
