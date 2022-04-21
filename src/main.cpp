@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include "math/Fixed.h"
 #include "math/Vector3D.h"
@@ -49,23 +50,71 @@ int main() {
 	system("pause");
 #endif
 
-	int imageSize = 512;
+	int imageSize = 128;
 	Image blueNoise(imageSize, imageSize, 1);
-	int pointCount = 256;
+	int pointCount = 512;
 
 	std::fstream points;
 	points.open("points.txt", std::ios_base::out);
 	points << std::setprecision(15);
 
-	for (int i = 0; i < pointCount; i++) {
-		Vector3D randomPoint = Vector3D::RandomVector(0, 1);
-		points << randomPoint << '\n';
+	struct Points {
+		Vector3D loc;
+		Fixed distToClosest;
+	};
 
-		Vector3D texturePoint = Vector3D::Floor(randomPoint * imageSize);
+	std::vector<Vector3D> existingPoints;
+	existingPoints.reserve(pointCount);
+
+	existingPoints.push_back(Vector3D::RandomVector());
+	points << existingPoints.back() << '\n';
+
+	int m = 10;
+
+	for (int i = 1; i < pointCount; i++) {
+		int candidateCount = existingPoints.size() * m + 1;
+		std::vector<Points> candidates;
+		candidates.reserve(candidateCount);
+
+		for (int j = 0; j < candidateCount; j++) {
+			Vector3D candidate = Vector3D::RandomVector();
+			Fixed nearestDistance = 0;
+
+			for (int k = 0; k < existingPoints.size(); k++) {
+				Fixed distance = Vector3D::ToroidalDistance(candidate, existingPoints[k], Vector3D(0), Vector3D(1));
+
+				if (k == 0) {
+					nearestDistance = distance;
+				}
+				else {
+					if (distance < nearestDistance) nearestDistance = distance;
+				}
+			}
+
+			candidates.push_back({ candidate, nearestDistance });
+		}
+
+		int furthestIndex = 0;
+
+		for (int j = 1; j < candidates.size(); j++) {
+			Fixed furthestDist = candidates[furthestIndex].distToClosest;
+			Fixed currentDist = candidates[j].distToClosest;
+
+			if (currentDist > furthestDist) furthestIndex = j;
+		}
+
+		existingPoints.push_back(candidates[furthestIndex].loc);
+
+		points << existingPoints.back() << '\n';
+
+		//Vector3D randomPoint = Vector3D::RandomVector(0, 1);
+		//points << randomPoint << '\n';
+
+		Vector3D texturePoint = Vector3D::Floor(existingPoints.back() * imageSize);
 		int pointX = texturePoint.GetX().ToInt();
 		int pointY = texturePoint.GetY().ToInt();
 		Fixed color = 255;
-		//Fixed color = randomPoint.GetZ() * 255;
+		//Fixed color = existingPoints.back() * 255;
 
 		blueNoise.SetColor(pointX, pointY, color, color, color);
 	}
