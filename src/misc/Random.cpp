@@ -1,38 +1,24 @@
-#include <cmath>
-
 #include "Random.h"
 
-float Random::RandFloat() {
-	unsigned int rand = Random::RandomUInt();
-
-	return rand / (float)Random::MaxUInt;
-}
-
-float Random::RandFloatRange(const float from, const float to) {
-	float factor = Random::RandFloat();
-	return std::lerp(from, to, factor);
-}
-
-int Random::RandInt() {
-	int out = (int)Random::RandomUInt(31);
-
-	if (Random::RandomUInt(1) == 1) return -out;
-	return out;
-}
-
-unsigned int Random::RandomUInt(const unsigned int bitCount) {
-    unsigned int count = bitCount > 32 ? 32 : bitCount;
-    unsigned int out = 0;
+Fixed Random::RandomPInt(const unsigned int bitCount) {
+    unsigned int count = bitCount > 11 ? 11 : bitCount;
+    int out = 0;
 
     if (Random::Seed == 0) Random::Seed = 1;
 
-	for (int i = (int)count - 1; i >= 0; i--) {
-		out = out | ((Random::Seed & 0b1) << i);
+    for (int i = (int)count - 1; i >= 0; i--) {
+        out = out | ((Random::Seed & 0b1) << i);
 
-		unsigned int newBit = Random::Seed ^ (Random::Seed >> 1) ^ (Random::Seed >> 21) ^ (Random::Seed >> 31);
-		newBit = newBit & 1;
+        unsigned int newBit = Random::Seed ^ (Random::Seed >> 1) ^ (Random::Seed >> 21) ^ (Random::Seed >> 31);
+        newBit = newBit & 1;
 
-		Random::Seed = (Random::Seed >> 1) | (newBit << 31);
-	}
-	return out;
+        Random::Seed = (Random::Seed >> 1) | (newBit << 31);
+    }
+    return Fixed(out);
+}
+
+Fixed Random::RandomFloat(const Fixed& min, const Fixed& max) {
+    Fixed random = Random::RandomPInt();
+    random /= Random::MaxVal;
+    return (random * (max - min)) + min;
 }

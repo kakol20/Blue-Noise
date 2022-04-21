@@ -155,13 +155,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\math\Fixed.cpp" />
+    <ClCompile Include="src\math\Vector3D.cpp" />
+    <ClCompile Include="src\misc\Image.cpp" />
     <ClCompile Include="src\misc\Random.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\misc\String.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ext\fpm\fixed.hpp" />
+    <ClInclude Include="ext\fpm\ios.hpp" />
+    <ClInclude Include="ext\fpm\math.hpp" />
+    <ClInclude Include="ext\stb\stb_image.h" />
+    <ClInclude Include="ext\stb\stb_image_write.h" />
+    <ClInclude Include="src\math\Fixed.h" />
+    <ClInclude Include="src\math\Vector3D.h" />
+    <ClInclude Include="src\misc\Image.h" />
     <ClInclude Include="src\misc\Random.h" />
-    <ClInclude Include="src\misc\String.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
