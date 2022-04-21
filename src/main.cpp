@@ -63,7 +63,7 @@ int main() {
 
 	int imageSize = 128;
 	Image blueNoise(imageSize, imageSize, 1);
-	int pointCount = 1024;
+	int pointCount = 256;
 
 	std::fstream points;
 	points.open("points.txt", std::ios_base::out);
@@ -80,7 +80,7 @@ int main() {
 	existingPoints.push_back(Vector3D::RandomVector());
 	points << existingPoints.back() << '\n';
 
-	int m = 10;
+	int m = 200;
 
 	for (int i = 1; i < pointCount; i++) {
 		int candidateCount = (int)existingPoints.size() * m + 1;
@@ -139,7 +139,7 @@ int main() {
 
 		output += "Progress: ";
 
-		output += std::to_string(i);
+		output += std::to_string(i + 1);
 		output += '/';
 		output += std::to_string(pointCount);
 		//output += '\a';
