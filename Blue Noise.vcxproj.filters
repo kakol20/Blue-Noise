@@ -21,9 +21,6 @@
     <ClCompile Include="src\misc\Random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\misc\String.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\math\Fixed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,12 +30,12 @@
     <ClCompile Include="src\misc\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\misc\FastWrite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\misc\Random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\misc\String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ext\stb\stb_image_write.h">
@@ -63,6 +60,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\misc\Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\oof\oof.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\misc\FastWrite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

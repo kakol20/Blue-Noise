@@ -5,10 +5,15 @@
 #include <fstream>
 #include <vector>
 
+#define OOF_IMPL
+
+#include "../ext/oof/oof.h"
+
 #include "math/Fixed.h"
 #include "math/Vector3D.h"
 #include "misc/Image.h"
 #include "misc/Random.h"
+#include "misc/FastWrite.h"
 
 thread_local unsigned int Random::Seed = 0xACE1u;
 const Fixed Fixed::PI = Fixed::CustomFixed::pi();
@@ -35,6 +40,10 @@ const unsigned int Image::Threshold[] = {
 };
 
 int main() {
+	FastWrite::EnableVTMode();
+
+	std::cout << oof::cursor_visibility(false) << oof::reset_formatting() << oof::clear_screen() << oof::bg_color({ 12, 12, 12 });
+
 	std::cout << std::setprecision(15);
 
 #ifdef DO_TEST
@@ -116,6 +125,23 @@ int main() {
 		//Fixed color = existingPoints.back() * 255;
 
 		blueNoise.SetColor(pointX, pointY, color, color, color);
+
+		//system("CLS");
+		//std::cout << i << '/' << pointCount << '\n';
+		std::string output = "";
+		output += oof::clear_screen();
+		output += oof::cursor_visibility(false);
+		output += oof::reset_formatting();
+		output += oof::bg_color({ 12, 12, 12 });
+		output += oof::position(0, 0);
+
+		output += "Progress: ";
+
+		output += std::to_string(i);
+		output += '/';
+		output += std::to_string(pointCount);
+
+		FastWrite::Write(output);
 	}
 	points.close();
 	blueNoise.Write("points_visual.png");
