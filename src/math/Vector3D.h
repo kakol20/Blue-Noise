@@ -59,6 +59,8 @@ public:
 	static Vector3D RandomUnitVector();
 	static Vector3D RandomVector(const Fixed& min = 0, const Fixed& max = 1);
 
+	static Vector3D Floor(const Vector3D& v);
+
 	Fixed Magnitude();
 	Fixed SqrMagnitude();
 	Vector3D UVSphere();

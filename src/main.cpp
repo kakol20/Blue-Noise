@@ -1,5 +1,8 @@
+//#define DO_TEST
+
 #include <iomanip>
 #include <iostream>
+#include <fstream>
 
 #include "math/Fixed.h"
 #include "math/Vector3D.h"
@@ -33,7 +36,7 @@ const unsigned int Image::Threshold[] = {
 int main() {
 	std::cout << std::setprecision(15);
 
-#ifdef _DEBUG
+#ifdef DO_TEST
 	Fixed angle = 1e-2;
 	//angle = angle * (Fixed::Pow(10, -1));
 	Fixed sinAngle = Fixed::Sin(angle);
@@ -45,5 +48,28 @@ int main() {
 
 	system("pause");
 #endif
+
+	int imageSize = 512;
+	Image blueNoise(imageSize, imageSize, 1);
+	int pointCount = 256;
+
+	std::fstream points;
+	points.open("points.txt", std::ios_base::out);
+	points << std::setprecision(15);
+
+	for (int i = 0; i < pointCount; i++) {
+		Vector3D randomPoint = Vector3D::RandomVector(0, 1);
+		points << randomPoint << '\n';
+
+		Vector3D texturePoint = Vector3D::Floor(randomPoint * imageSize);
+		int pointX = texturePoint.GetX().ToInt();
+		int pointY = texturePoint.GetY().ToInt();
+		Fixed color = 255;
+		//Fixed color = randomPoint.GetZ() * 255;
+
+		blueNoise.SetColor(pointX, pointY, color, color, color);
+	}
+	points.close();
+	blueNoise.Write("points_visual.png");
 	return 0;
 }

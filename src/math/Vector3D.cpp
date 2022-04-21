@@ -97,11 +97,15 @@ Vector3D Vector3D::operator+(const Vector3D& otherVector) const {
 }
 
 Vector3D Vector3D::operator*(const Fixed& scalar) const {
-	return Vector3D(m_x, m_y, m_z) * scalar;
+	Vector3D out(m_x, m_y, m_z);
+	out *= scalar;
+	return out;
 }
 
 Vector3D Vector3D::operator/(const Fixed& scalar) const {
-	return Vector3D(m_x, m_y, m_z) / scalar;
+	Vector3D out(m_x, m_y, m_z);
+	out /= scalar;
+	return out;
 }
 
 Vector3D Vector3D::operator-() const {
@@ -170,6 +174,10 @@ Vector3D Vector3D::RandomVector(const Fixed& min, const Fixed& max) {
 	return Vector3D(Random::RandomFloat(min, max), Random::RandomFloat(min, max), Random::RandomFloat(min, max));
 }
 
+Vector3D Vector3D::Floor(const Vector3D& v) {
+	return Vector3D(Fixed::Floor(v.m_x), Fixed::Floor(v.m_y), Fixed::Floor(v.m_z));
+}
+
 Fixed Vector3D::Magnitude() {
 	Fixed sqrMag = SqrMagnitude();
 
@@ -195,6 +203,6 @@ void Vector3D::Normalize() {
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector3D& otherVector) {
-	os << "( " << otherVector.m_x << ", " << otherVector.m_y << ", " << otherVector.m_z << ")";
+	os << otherVector.m_x << "," << otherVector.m_y << "," << otherVector.m_z;
 	return os;
 }
