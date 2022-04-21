@@ -72,45 +72,44 @@ int main() {
 	int m = 10;
 
 	for (int i = 1; i < pointCount; i++) {
-		int candidateCount = existingPoints.size() * m + 1;
-		std::vector<Points> candidates;
-		candidates.reserve(candidateCount);
+		int candidateCount = (int)existingPoints.size() * m + 1;
+		//std::vector<Points> candidates;
+		//candidates.reserve(candidateCount);
 
+		Points furthestPoint = { Vector3D(0), 0 };
 		for (int j = 0; j < candidateCount; j++) {
-			Vector3D candidate = Vector3D::RandomVector();
-			Fixed nearestDistance = 0;
+			Vector3D currentPoint = Vector3D::RandomVector();
+			Fixed closestDist = 0;
 
-			for (int k = 0; k < existingPoints.size(); k++) {
-				Fixed distance = Vector3D::ToroidalDistance(candidate, existingPoints[k], Vector3D(0), Vector3D(1));
+			for (size_t k = 0; k < existingPoints.size(); k++) {
+				Fixed currentDist = Vector3D::ToroidalDistance(currentPoint, existingPoints[k], Vector3D(0), Vector3D(1));
 
 				if (k == 0) {
-					nearestDistance = distance;
+					closestDist = currentDist;
 				}
-				else {
-					if (distance < nearestDistance) nearestDistance = distance;
+				else if (currentDist < closestDist) {
+					closestDist = currentDist;
 				}
 			}
 
-			candidates.push_back({ candidate, nearestDistance });
+			if (j == 0) {
+				furthestPoint.loc = currentPoint;
+				furthestPoint.distToClosest = closestDist;
+			}
+			else if (closestDist > furthestPoint.distToClosest) {
+				furthestPoint.loc = currentPoint;
+				furthestPoint.distToClosest = closestDist;
+			}
 		}
 
-		int furthestIndex = 0;
+		existingPoints.push_back(furthestPoint.loc);
 
-		for (int j = 1; j < candidates.size(); j++) {
-			Fixed furthestDist = candidates[furthestIndex].distToClosest;
-			Fixed currentDist = candidates[j].distToClosest;
-
-			if (currentDist > furthestDist) furthestIndex = j;
-		}
-
-		existingPoints.push_back(candidates[furthestIndex].loc);
-
-		points << existingPoints.back() << '\n';
+		points << furthestPoint.loc << '\n';
 
 		//Vector3D randomPoint = Vector3D::RandomVector(0, 1);
 		//points << randomPoint << '\n';
 
-		Vector3D texturePoint = Vector3D::Floor(existingPoints.back() * imageSize);
+		Vector3D texturePoint = Vector3D::Floor(furthestPoint.loc * imageSize);
 		int pointX = texturePoint.GetX().ToInt();
 		int pointY = texturePoint.GetY().ToInt();
 		Fixed color = 255;

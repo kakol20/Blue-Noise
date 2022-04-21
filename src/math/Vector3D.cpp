@@ -125,7 +125,8 @@ Fixed Vector3D::ToroidalDistance(const Vector3D& a, const Vector3D& b, const Vec
 	if (delta.m_y > mid.m_y) delta.m_y = minMaxDelta.m_y - delta.m_y;
 	if (delta.m_z > mid.m_z) delta.m_z = minMaxDelta.m_z - delta.m_z;
 
-	return delta.Magnitude();
+	//return delta.Magnitude();
+	return delta.SqrMagnitude();
 }
 
 Vector3D Vector3D::Abs(const Vector3D& v) {
