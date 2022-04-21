@@ -1,8 +1,10 @@
 //#define DO_TEST
 
+#include <chrono>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <fstream>
+#include <thread>
 #include <vector>
 
 #define OOF_IMPL
@@ -61,7 +63,7 @@ int main() {
 
 	int imageSize = 128;
 	Image blueNoise(imageSize, imageSize, 1);
-	int pointCount = 512;
+	int pointCount = 1024;
 
 	std::fstream points;
 	points.open("points.txt", std::ios_base::out);
@@ -140,10 +142,18 @@ int main() {
 		output += std::to_string(i);
 		output += '/';
 		output += std::to_string(pointCount);
+		//output += '\a';
+		//Beep(523, 500);
 
 		FastWrite::Write(output);
 	}
+	std::string sound = "\a";
+	FastWrite::Write(sound);
 	points.close();
 	blueNoise.Write("points_visual.png");
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+	//system("pause");
 	return 0;
 }
