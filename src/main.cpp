@@ -126,12 +126,10 @@ int main() {
 
 		//system("CLS");
 		//std::cout << i << '/' << pointCount << '\n';
+
+		FastWrite::Reset();
+
 		std::string output = "";
-		output += oof::clear_screen();
-		output += oof::cursor_visibility(false);
-		output += oof::reset_formatting();
-		output += oof::bg_color({ 12, 12, 12 });
-		output += oof::position(0, 0);
 
 		output += "Progress: ";
 

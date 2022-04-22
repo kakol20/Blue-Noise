@@ -1,6 +1,8 @@
 #include <iostream>
 #include <Windows.h>
 
+#include "../../ext/oof/oof.h"
+
 #include "FastWrite.h"
 
 auto FastWrite::EnableVTMode() -> void {
@@ -23,6 +25,16 @@ auto FastWrite::EnableVTMode() -> void {
 	if (!SetConsoleMode(handle, dwMode)) {
 		std::terminate(); // error handling
 	}
+}
+
+void FastWrite::Reset() {
+	std::string output = "";
+	output += oof::clear_screen();
+	output += oof::cursor_visibility(false);
+	output += oof::reset_formatting();
+	output += oof::bg_color({ 12, 12, 12 });
+	output += oof::position(0, 0);
+	FastWrite::Write(output);
 }
 
 void FastWrite::Write(std::string& output) {
