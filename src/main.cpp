@@ -1,4 +1,5 @@
 //#define DEBUG_VALUES
+#define DO_MANY
 //#define DO_TEST
 #define OOF_IMPL
 
@@ -60,19 +61,26 @@ int main() {
 
 	system("pause");
 #endif
+#ifdef DO_MANY
+	int m = 2;
+	int imageSize = 256;
+	int pointCount = 4096;
 
+#else
+	int m = 5;
 	int imageSize = 128;
-	Image blueNoise(imageSize, imageSize, 1);
 	int pointCount = 256;
 
 	std::fstream points;
 	points.open("points.txt", std::ios_base::out);
 	points << std::setprecision(15);
+#endif // DO_MANY
+
+	Image blueNoise(imageSize, imageSize, 1);
 
 	std::vector<Vector3D> existingPoints;
 	existingPoints.reserve(pointCount);
 
-	int m = 5;
 	Fixed max = 63;
 
 	for (int i = 0; i < pointCount; i++) {
@@ -102,10 +110,10 @@ int main() {
 		existingPoints.push_back(furthestPoint);
 
 		furthestPoint /= max;
-		points << furthestPoint << '\n';
 
-		furthestPoint *= Vector3D(1, 1, 0);
-		furthestPoint += Vector3D(0, 0, 1);
+#ifndef DO_MANY
+		points << furthestPoint << '\n';
+#endif // !DO_MANY
 
 		Vector3D texturePoint = Vector3D::Floor(furthestPoint * imageSize);
 		int pointX = texturePoint.GetX().ToInt();
@@ -139,8 +147,14 @@ int main() {
 	}
 	std::string sound = "\a";
 	FastWrite::Write(sound);
+
+#ifdef DO_MANY
+	blueNoise.Write("points_visual_many.png");
+#else
 	points.close();
+
 	blueNoise.Write("points_visual.png");
+#endif // DO_MANY
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
