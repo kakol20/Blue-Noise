@@ -1,4 +1,6 @@
+//#define DEBUG_VALUES
 //#define DO_TEST
+#define OOF_IMPL
 
 #include <chrono>
 #include <fstream>
@@ -6,8 +8,6 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-
-#define OOF_IMPL
 
 #include "../ext/oof/oof.h"
 
@@ -72,38 +72,28 @@ int main() {
 	std::vector<Vector3D> existingPoints;
 	existingPoints.reserve(pointCount);
 
-	/*existingPoints.push_back(Vector3D::RandomVector());
-	points << existingPoints.back() << '\n';*/
-
-	int m = 200;
+	int m = 5;
+	Fixed max = 63;
 
 	for (int i = 0; i < pointCount; i++) {
 		int candidateCount = (int)existingPoints.size() * m + 1;
-		//std::vector<Points> candidates;
-		//candidates.reserve(candidateCount);
 
 		Vector3D furthestPoint;
-		Fixed furthestDist = 0;
+		furthestPoint.WithZAxis(false);
+		Fixed furthestDist = Fixed::Min();
 		for (int j = 0; j < candidateCount; j++) {
-			Vector3D currentPoint = Vector3D::RandomVector();
-			Fixed closestDist = 0;
+			Vector3D currentPoint = Vector3D::RandomVector(0, max, false);
+			Fixed closestDist = Fixed::Max();
 
 			for (size_t k = 0; k < existingPoints.size(); k++) {
-				Fixed currentDist = Vector3D::ToroidalDistance(currentPoint, existingPoints[k], Vector3D(0), Vector3D(1));
+				Fixed currentDist = Vector3D::ToroidalDistance(currentPoint, existingPoints[k], Vector3D(0), Vector3D(max));
 
-				if (k == 0) {
-					closestDist = currentDist;
-				}
-				else if (currentDist < closestDist) {
+				if (currentDist < closestDist) {
 					closestDist = currentDist;
 				}
 			}
 
-			if (j == 0) {
-				furthestPoint = currentPoint;
-				furthestDist = closestDist;
-			}
-			else if (closestDist > furthestDist) {
+			if (closestDist > furthestDist) {
 				furthestPoint = currentPoint;
 				furthestDist = closestDist;
 			}
@@ -111,18 +101,24 @@ int main() {
 
 		existingPoints.push_back(furthestPoint);
 
+		furthestPoint /= max;
 		points << furthestPoint << '\n';
 
-		//Vector3D randomPoint = Vector3D::RandomVector(0, 1);
-		//points << randomPoint << '\n';
+		furthestPoint *= Vector3D(1, 1, 0);
+		furthestPoint += Vector3D(0, 0, 1);
 
 		Vector3D texturePoint = Vector3D::Floor(furthestPoint * imageSize);
 		int pointX = texturePoint.GetX().ToInt();
 		int pointY = texturePoint.GetY().ToInt();
-		Fixed color = 255;
-		//Fixed color = existingPoints.back() * 255;
+		//Fixed color = 255;
+		//Fixed color = furthestPoint.GetZ() * 255;
 
-		blueNoise.SetColor(pointX, pointY, color, color, color);
+#ifdef DEBUG_VALUES
+		Fixed::FlOrDo distDebug = furthestDist.ToFloat();
+		distDebug *= 1;
+#endif // DEBUG_VALUES
+
+		blueNoise.SetColor(pointX, pointY, 255, 255, 255);
 
 		//system("CLS");
 		//std::cout << i << '/' << pointCount << '\n';

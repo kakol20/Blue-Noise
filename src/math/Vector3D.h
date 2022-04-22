@@ -57,7 +57,7 @@ public:
 	static Vector3D RandomInUnitDisk();
 	static Vector3D RandomInUnitSphere();
 	static Vector3D RandomUnitVector();
-	static Vector3D RandomVector(const Fixed& min = 0, const Fixed& max = 1);
+	static Vector3D RandomVector(const Fixed& min = 0, const Fixed& max = 1, bool withZAxis = true);
 
 	static Vector3D Floor(const Vector3D& v);
 
@@ -65,6 +65,7 @@ public:
 	Fixed SqrMagnitude();
 	Vector3D UVSphere();
 	void Normalize();
+	void WithZAxis(bool withZAxis);
 
 	// ----- friend FUNCTIONS -----
 
@@ -74,6 +75,8 @@ private:
 	Fixed m_x;
 	Fixed m_y;
 	Fixed m_z;
+
+	bool m_withZAxis;
 };
 
 #endif // !VECTOR3D_H
