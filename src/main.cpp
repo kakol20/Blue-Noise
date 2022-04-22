@@ -69,25 +69,21 @@ int main() {
 	points.open("points.txt", std::ios_base::out);
 	points << std::setprecision(15);
 
-	struct Points {
-		Vector3D loc;
-		Fixed distToClosest;
-	};
-
 	std::vector<Vector3D> existingPoints;
 	existingPoints.reserve(pointCount);
 
-	existingPoints.push_back(Vector3D::RandomVector());
-	points << existingPoints.back() << '\n';
+	/*existingPoints.push_back(Vector3D::RandomVector());
+	points << existingPoints.back() << '\n';*/
 
 	int m = 200;
 
-	for (int i = 1; i < pointCount; i++) {
+	for (int i = 0; i < pointCount; i++) {
 		int candidateCount = (int)existingPoints.size() * m + 1;
 		//std::vector<Points> candidates;
 		//candidates.reserve(candidateCount);
 
-		Points furthestPoint = { Vector3D(0), 0 };
+		Vector3D furthestPoint;
+		Fixed furthestDist = 0;
 		for (int j = 0; j < candidateCount; j++) {
 			Vector3D currentPoint = Vector3D::RandomVector();
 			Fixed closestDist = 0;
@@ -104,23 +100,23 @@ int main() {
 			}
 
 			if (j == 0) {
-				furthestPoint.loc = currentPoint;
-				furthestPoint.distToClosest = closestDist;
+				furthestPoint = currentPoint;
+				furthestDist = closestDist;
 			}
-			else if (closestDist > furthestPoint.distToClosest) {
-				furthestPoint.loc = currentPoint;
-				furthestPoint.distToClosest = closestDist;
+			else if (closestDist > furthestDist) {
+				furthestPoint = currentPoint;
+				furthestDist = closestDist;
 			}
 		}
 
-		existingPoints.push_back(furthestPoint.loc);
+		existingPoints.push_back(furthestPoint);
 
-		points << furthestPoint.loc << '\n';
+		points << furthestPoint << '\n';
 
 		//Vector3D randomPoint = Vector3D::RandomVector(0, 1);
 		//points << randomPoint << '\n';
 
-		Vector3D texturePoint = Vector3D::Floor(furthestPoint.loc * imageSize);
+		Vector3D texturePoint = Vector3D::Floor(furthestPoint * imageSize);
 		int pointX = texturePoint.GetX().ToInt();
 		int pointY = texturePoint.GetY().ToInt();
 		Fixed color = 255;
