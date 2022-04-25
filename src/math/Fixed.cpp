@@ -308,6 +308,6 @@ Fixed Fixed::Cubic(const Fixed& a, const Fixed& b, const Fixed& c, const Fixed& 
 	return out + (a * fSquared) + (2 * fSquared * c) + b;
 #else
 
-	return b + 0.5 * factor * (c - a + factor * (2 * a - 5 * b + 4 * c - d + factor * (3 * (b - c) + d - a)));
+	return b + (Fixed::FlOrDo)0.5 * factor * (c - a + factor * (2 * a - 5 * b + 4 * c - d + factor * (3 * (b - c) + d - a)));
 #endif // method1
 }

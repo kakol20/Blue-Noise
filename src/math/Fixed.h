@@ -7,14 +7,16 @@
 
 class Fixed {
 public:
-	using CustomFixed = fpm::fixed<std::int32_t, std::int64_t, 20>;
+	//using CustomFixed = fpm::fixed<int_least32_t, intmax_t, 20>;
+
+	typedef fpm::fixed<int_least32_t, intmax_t, 20> CustomFixed;
 
 #ifdef WIN32
 	// float or double
-	using FlOrDo = float;
+	typedef float FlOrDo;
 #else
 	// float or double
-	using FlOrDo = double;
+	typedef double FlOrDo;
 #endif // WIN32
 
 	Fixed(const double& n);

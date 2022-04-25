@@ -208,7 +208,7 @@ Fixed Vector3D::SqrMagnitude() {
 }
 
 Vector3D Vector3D::UVSphere() {
-	return Vector3D(0.5 + (Fixed::Atan2(m_x, m_z) / Fixed::TAU), 0.5 - (Fixed::Asin(m_y) / Fixed::PI), 0);
+	return Vector3D((Fixed::FlOrDo)0.5 + (Fixed::Atan2(m_x, m_z) / Fixed::TAU), (Fixed::FlOrDo)0.5 - (Fixed::Asin(m_y) / Fixed::PI), 0);
 }
 
 void Vector3D::Normalize() {

@@ -1,6 +1,8 @@
 //#define DEBUG_VALUES
-#define DO_MANY
+//#define DO_MANY
+#define DO_NOISE
 //#define DO_TEST
+
 #define OOF_IMPL
 
 #include <chrono>
@@ -59,13 +61,18 @@ int main() {
 	Fixed sqrtMag2 = sqrt2 * sqrt2;
 	std::cout << "\nSquare root of 2: " << sqrt2 << "\nTimes itself: " << sqrtMag2 << '\n';
 
+	// std::int64_t
+	std::cout << "intmax_t: " << sizeof(intmax_t) << '\n';
+	std::cout << "std::int64_t: " << sizeof(std::int64_t) << '\n';
+
 	system("pause");
 #endif
+
+#ifdef DO_NOISE
 #ifdef DO_MANY
 	int m = 2;
 	int imageSize = 256;
 	int pointCount = 4096;
-
 #else
 	int m = 5;
 	int imageSize = 128;
@@ -155,8 +162,8 @@ int main() {
 
 	blueNoise.Write("points_visual.png");
 #endif // DO_MANY
-
 	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+#endif // DO_NOISE
 
 	//system("pause");
 	return 0;
