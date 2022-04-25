@@ -175,6 +175,16 @@
     <ClInclude Include="src\misc\Image.h" />
     <ClInclude Include="src\misc\Random.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="points_visual.png" />
+    <Image Include="points_visual_many.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="points.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

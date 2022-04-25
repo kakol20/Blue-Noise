@@ -69,4 +69,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="points_visual_many.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="points_visual.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="points.txt" />
+  </ItemGroup>
 </Project>
