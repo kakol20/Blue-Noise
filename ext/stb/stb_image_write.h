@@ -861,7 +861,7 @@ static unsigned int stbiw__zhash(unsigned char* data) {
 
 #define stbiw__zlib_flush() (out = stbiw__zlib_flushf(out, &bitbuf, &bitcount))
 #define stbiw__zlib_add(code,codebits) \
-      (bitbuf |= (code) << bitcount, bitcount += (codebits), stbiw__zlib_flush())
+	  (bitbuf |= (code) << bitcount, bitcount += (codebits), stbiw__zlib_flush())
 #define stbiw__zlib_huffa(b,c)  stbiw__zlib_add(stbiw__zlib_bitrev(b,c),c)
 // default huffman tables
 #define stbiw__zlib_huff1(n)  stbiw__zlib_huffa(0x30 + (n), 8)

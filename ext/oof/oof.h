@@ -27,7 +27,6 @@ namespace oof {
 		friend constexpr auto operator==(const color&, const color&) -> bool = default;
 	};
 
-
 	// Necessary forward declarations
 	struct fg_rgb_color_sequence; struct fg_index_color_sequence;
 	struct bg_rgb_color_sequence; struct bg_index_color_sequence;
@@ -79,7 +78,6 @@ namespace oof {
 	[[nodiscard]] auto move_up(int amount)->move_up_sequence;
 	[[nodiscard]] auto move_down(int amount)->move_down_sequence;
 
-
 	using error_callback_type = void(*)(const std::string& msg);
 	inline error_callback_type error_callback = nullptr;
 
@@ -107,7 +105,6 @@ namespace oof {
 	template<typename T>
 	concept sequence_c = is_alternative_v<T, sequence_variant_type>;
 
-
 	// Writes a single sequence type into a string
 	template<oof::std_string_type string_type, oof::sequence_c sequence_type>
 	auto write_sequence_into_string(string_type& target, const sequence_type& sequence) -> void;
@@ -123,7 +120,6 @@ namespace oof {
 	// Returns the exact size a string from this vector of sequence types
 	[[nodiscard]] auto get_string_reserve_size(const std::vector<sequence_variant_type>& sequences)->size_t;
 
-
 	struct cell_format {
 		bool m_underline = false;
 		bool m_bold = false;
@@ -131,7 +127,6 @@ namespace oof {
 		color m_bg_color{ 0, 0, 0 };
 		friend constexpr auto operator==(const cell_format&, const cell_format&) -> bool = default;
 	};
-
 
 	template<oof::std_string_type string_type>
 	struct cell {
@@ -141,7 +136,6 @@ namespace oof {
 		cell_format m_format{};
 		friend constexpr auto operator==(const cell&, const cell&) -> bool = default;
 	};
-
 
 	template<oof::std_string_type string_type>
 	struct screen {
@@ -187,7 +181,6 @@ namespace oof {
 		mutable std::vector<sequence_variant_type> m_sequence_buffer;
 	};
 
-
 	struct pixel_screen {
 		std::vector<color> m_pixels;
 
@@ -230,8 +223,6 @@ namespace oof {
 		mutable screen<std::wstring> m_screen;
 	};
 
-
-
 	// Deduction guide
 	template<typename char_type>
 	screen(int, int, int, int, char_type fill_char)->screen<std::basic_string<char_type>>;
@@ -242,7 +233,6 @@ namespace oof {
 	auto operator<<(stream_type& os, const sequence_type& sequence)->stream_type&;
 
 	namespace detail {
-
 		// CRTP to extend the numerous sequence types with convenience member functions without using runtime
 		// polymorphism or repeating the code
 		template<typename T>
@@ -296,7 +286,6 @@ namespace oof {
 			friend constexpr auto operator==(const cell_pos&, const cell_pos&) -> bool = default;
 		};
 
-
 		template<oof::std_string_type string_type>
 		struct draw_state {
 			using cell_type = cell<string_type>;
@@ -326,9 +315,7 @@ namespace oof {
 
 		template<std_string_type string_type>
 		using fitting_char_sequence_t = std::conditional_t<std::is_same_v<string_type, std::string>, char_sequence, wchar_sequence>;
-
 	} // namespace detail
-
 
 	struct fg_rgb_color_sequence : detail::extender<fg_rgb_color_sequence> {
 		color m_color;
@@ -385,9 +372,7 @@ namespace oof {
 	};
 	struct reset_sequence : detail::extender<reset_sequence> {};
 	struct clear_screen_sequence : detail::extender<clear_screen_sequence> {};
-
 } // namespace oof
-
 
 // Constexpr, therefore defined here
 template<oof::sequence_c sequence_type>
@@ -464,7 +449,6 @@ constexpr auto oof::detail::get_sequence_string_size(const sequence_type& sequen
 	}
 }
 
-
 // This will deliberately be instantiated at compiletime
 template<typename stream_type, oof::sequence_c sequence_type>
 auto oof::operator<<(stream_type& os, const sequence_type& sequence) -> stream_type& {
@@ -476,7 +460,6 @@ auto oof::operator<<(stream_type& os, const sequence_type& sequence) -> stream_t
 	os << temp_string;
 	return os;
 }
-
 
 #ifdef OOF_IMPL
 
@@ -500,14 +483,12 @@ auto oof::detail::write_int_to_string(
 	target += '0' + value % 10;
 }
 
-
 // Instantiated by write_sequence_into_string()
 template<oof::std_string_type string_type, typename T, typename ... Ts>
 auto oof::detail::write_ints_into_string(string_type& target, const T& first, const Ts&... rest) -> void {
 	detail::write_int_to_string(target, first, false);
 	(detail::write_int_to_string(target, rest, true), ...);
 }
-
 
 // Instantiated by write_sequence_string_no_reserve()
 template<oof::std_string_type string_type, oof::sequence_c sequence_type>
@@ -599,7 +580,6 @@ auto oof::write_sequence_into_string(
 	}
 }
 
-
 template<oof::std_string_type string_type>
 auto oof::detail::get_index_color_seq_str(
 	const set_index_color_sequence& sequence
@@ -633,7 +613,6 @@ auto oof::detail::get_index_color_seq_str(
 	return result;
 }
 
-
 template<oof::std_string_type string_type>
 auto oof::screen<string_type>::update_sequence_buffer() const -> void {
 	detail::draw_state<string_type> state{};
@@ -655,7 +634,6 @@ auto oof::screen<string_type>::update_sequence_buffer() const -> void {
 		);
 	}
 }
-
 
 template<oof::std_string_type string_type>
 oof::screen<string_type>::screen(
@@ -679,7 +657,6 @@ oof::screen<string_type>::screen(
 	}
 }
 
-
 template<oof::std_string_type string_type>
 oof::screen<string_type>::screen(
 	const int width, const int height,
@@ -687,9 +664,7 @@ oof::screen<string_type>::screen(
 	const char_type fill_char
 )
 	: screen(width, height, start_column, start_line, cell<string_type>{fill_char}) {
-
 }
-
 
 template<oof::std_string_type string_type>
 oof::screen<string_type>::screen(
@@ -697,21 +672,17 @@ oof::screen<string_type>::screen(
 	const char_type fill_char
 )
 	: screen(width, height, 0, 0, fill_char) {
-
 }
-
 
 template <oof::std_string_type string_type>
 auto oof::screen<string_type>::get_width() const -> int {
 	return m_width;
 }
 
-
 template <oof::std_string_type string_type>
 auto oof::screen<string_type>::get_height() const -> int {
 	return m_height;
 }
-
 
 template<oof::std_string_type string_type>
 auto oof::screen<string_type>::get_string() const -> string_type {
@@ -720,7 +691,6 @@ auto oof::screen<string_type>::get_string() const -> string_type {
 	m_old_cells = m_cells;
 	return result;
 }
-
 
 template<oof::std_string_type string_type>
 auto oof::screen<string_type>::get_string(string_type& buffer) const -> void {
@@ -735,7 +705,6 @@ auto oof::screen<string_type>::get_string(string_type& buffer) const -> void {
 	::oof::detail::write_sequence_string_no_reserve(m_sequence_buffer, buffer);
 	m_old_cells = m_cells;
 }
-
 
 template <oof::std_string_type string_type>
 auto oof::screen<string_type>::write_into(
@@ -772,12 +741,10 @@ auto oof::screen<string_type>::write_into(
 	}
 }
 
-
 template<oof::std_string_type string_type>
 auto oof::screen<string_type>::is_inside(const int column, const int line) const -> bool {
 	return column >= 0 && column < m_width&& line >= 0 && line < m_height;
 }
-
 
 template<oof::std_string_type string_type>
 auto oof::screen<string_type>::get_cell(const int column, const int line) -> cell<string_type>& {
@@ -804,14 +771,12 @@ auto oof::screen<string_type>::get_cell(const int column, const int line) -> cel
 template struct oof::screen<std::string>;
 template struct oof::screen<std::wstring>;
 
-
 auto oof::get_string_reserve_size(const std::vector<sequence_variant_type>& sequences) -> size_t {
 	size_t reserve_size{};
 	for (const sequence_variant_type& sequence : sequences)
 		std::visit([&](const auto& alternative) { reserve_size += detail::get_sequence_string_size(alternative); }, sequence);
 	return reserve_size;
 }
-
 
 // Instantiated by oof::screen<string_type>::get_string()
 template<oof::std_string_type string_type>
@@ -822,7 +787,6 @@ auto oof::detail::write_sequence_string_no_reserve(
 	for (const sequence_variant_type& sequence : sequences)
 		std::visit([&](const auto& alternative) { write_sequence_into_string(target, alternative);  }, sequence);
 }
-
 
 template<oof::std_string_type string_type>
 auto oof::get_string_from_sequences(
@@ -836,7 +800,6 @@ auto oof::get_string_from_sequences(
 template auto oof::get_string_from_sequences(const std::vector<sequence_variant_type>& sequences)->std::string;
 template auto oof::get_string_from_sequences(const std::vector<sequence_variant_type>& sequences)->std::wstring;
 
-
 auto oof::position(const int line, const int column) -> position_sequence {
 	return position_sequence{
 	   .m_line = static_cast<uint8_t>(line),
@@ -844,41 +807,33 @@ auto oof::position(const int line, const int column) -> position_sequence {
 	};
 }
 
-
 auto oof::vposition(const int line) -> vposition_sequence {
 	return vposition_sequence{ .m_line = static_cast<uint8_t>(line) };
 }
-
 
 auto oof::hposition(const int column) -> hposition_sequence {
 	return hposition_sequence{ .m_column = static_cast<uint8_t>(column) };
 }
 
-
 auto oof::move_left(const int amount) -> move_left_sequence {
 	return move_left_sequence{ .m_amount = static_cast<uint8_t>(amount) };
 }
-
 
 auto oof::move_right(const int amount) -> move_right_sequence {
 	return move_right_sequence{ .m_amount = static_cast<uint8_t>(amount) };
 }
 
-
 auto oof::move_up(const int amount) -> move_up_sequence {
 	return move_up_sequence{ .m_amount = static_cast<uint8_t>(amount) };
 }
-
 
 auto oof::move_down(const int amount) -> move_down_sequence {
 	return move_down_sequence{ .m_amount = static_cast<uint8_t>(amount) };
 }
 
-
 auto oof::fg_color(const color& col) -> fg_rgb_color_sequence {
 	return fg_rgb_color_sequence{ .m_color = col };
 }
-
 
 auto oof::fg_color(const int index) -> fg_index_color_sequence {
 	if (index < 1 || index > 255) {
@@ -889,7 +844,6 @@ auto oof::fg_color(const int index) -> fg_index_color_sequence {
 	}
 	return fg_index_color_sequence{ .m_index = index };
 }
-
 
 auto oof::set_index_color(
 	const int index,
@@ -904,11 +858,9 @@ auto oof::set_index_color(
 	return set_index_color_sequence{ .m_index = index, .m_color = col };
 }
 
-
 auto oof::bg_color(const color& col) -> bg_rgb_color_sequence {
 	return bg_rgb_color_sequence{ .m_color = col };
 }
-
 
 auto oof::bg_color(const int index) -> bg_index_color_sequence {
 	if (index < 1 || index > 255) {
@@ -918,31 +870,25 @@ auto oof::bg_color(const int index) -> bg_index_color_sequence {
 	return bg_index_color_sequence{ .m_index = index };
 }
 
-
 auto oof::underline(const bool new_value) -> underline_sequence {
 	return underline_sequence{ .m_underline = new_value };
 }
-
 
 auto oof::bold(const bool new_value) -> bold_sequence {
 	return bold_sequence{ .m_bold = new_value };
 }
 
-
 auto oof::cursor_visibility(const bool new_value) -> cursor_visibility_sequence {
 	return cursor_visibility_sequence{ .m_visibility = new_value };
 }
-
 
 auto oof::reset_formatting() -> reset_sequence {
 	return reset_sequence{};
 }
 
-
 auto oof::clear_screen() -> clear_screen_sequence {
 	return clear_screen_sequence{};
 }
-
 
 oof::pixel_screen::pixel_screen(
 	const int width,
@@ -957,9 +903,7 @@ oof::pixel_screen::pixel_screen(
 	, m_origin_halfline(start_halfline)
 	, m_screen(width, this->get_line_height(), m_origin_column, m_origin_halfline / 2, detail::get_pixel_background(fill_color))
 	, m_pixels(width* halfline_height, fill_color) {
-
 }
-
 
 oof::pixel_screen::pixel_screen(
 	const int width,
@@ -968,23 +912,18 @@ oof::pixel_screen::pixel_screen(
 	const int start_halfline
 )
 	: pixel_screen(width, halfline_height, start_column, start_halfline, color{}) {
-
 }
-
 
 oof::pixel_screen::pixel_screen(
 	const int width,
 	const int halfline_height
 )
 	: pixel_screen(width, halfline_height, 0, 0, color{}) {
-
 }
-
 
 auto oof::pixel_screen::get_screen_ref() -> screen<std::wstring>& {
 	return m_screen;
 }
-
 
 auto oof::pixel_screen::compute_result() const -> void {
 	int halfline_top = (m_origin_halfline % 2 == 0) ? 0 : -1;
@@ -1001,18 +940,15 @@ auto oof::pixel_screen::compute_result() const -> void {
 	}
 }
 
-
 auto oof::pixel_screen::get_string() const -> std::wstring {
 	compute_result();
 	return m_screen.get_string();
 }
 
-
 auto oof::pixel_screen::get_string(std::wstring& buffer) const -> void {
 	compute_result();
 	m_screen.get_string(buffer);
 }
-
 
 auto oof::pixel_screen::get_line_height() const -> int {
 	const int first_line = m_origin_halfline / 2;
@@ -1020,12 +956,10 @@ auto oof::pixel_screen::get_line_height() const -> int {
 	return last_line - first_line + 1;
 }
 
-
 auto oof::pixel_screen::is_in(const int column, const int halfline) const -> bool {
 	const size_t index = halfline * this->get_width() + column;
 	return index >= 0 && index < m_pixels.size();
 }
-
 
 auto oof::pixel_screen::get_color(
 	const int column,
@@ -1035,7 +969,6 @@ auto oof::pixel_screen::get_color(
 	return m_pixels[index];
 }
 
-
 auto oof::pixel_screen::get_color(
 	const int column,
 	const int halfline
@@ -1044,29 +977,24 @@ auto oof::pixel_screen::get_color(
 	return m_pixels[index];
 }
 
-
 auto oof::pixel_screen::get_width() const -> int {
 	return m_screen.get_width();
 }
 
-
 auto oof::pixel_screen::get_halfline_height() const -> int {
 	return m_halfline_height;
 }
-
 
 auto oof::pixel_screen::clear() -> void {
 	for (color& pixel : m_pixels)
 		pixel = m_fill_color;
 }
 
-
 template<oof::std_string_type string_type>
 auto oof::screen<string_type>::clear() -> void {
 	for (cell<string_type>& cell : *this)
 		cell = m_background;
 }
-
 
 template<oof::std_string_type string_type>
 auto oof::detail::draw_state<string_type>::write_sequence(
@@ -1077,7 +1005,7 @@ auto oof::detail::draw_state<string_type>::write_sequence(
 	const int origin_line,
 	const int origin_column
 ) -> void {
-	// As long as there's no difference from last draw, don't do anything 
+	// As long as there's no difference from last draw, don't do anything
 	if (target_cell_state == old_cell_state)
 		return;
 
@@ -1114,7 +1042,6 @@ auto oof::detail::draw_state<string_type>::write_sequence(
 	m_format = target_cell_state.m_format;
 }
 
-
 template<oof::std_string_type string_type>
 auto oof::detail::draw_state<string_type>::is_position_sequence_necessary(
 	const cell_pos& target_pos
@@ -1137,7 +1064,6 @@ auto oof::detail::draw_state<string_type>::is_position_sequence_necessary(
 	return false;
 }
 
-
 template<oof::std_string_type string_type, oof::sequence_c sequence_type>
 auto oof::get_string_from_sequence(const sequence_type& sequence) -> string_type {
 	string_type result{};
@@ -1145,13 +1071,11 @@ auto oof::get_string_from_sequence(const sequence_type& sequence) -> string_type
 	return result;
 }
 
-
 auto oof::detail::error(const std::string& msg) -> void {
 	if (error_callback != nullptr) {
 		error_callback(msg);
 	}
 }
-
 
 auto oof::detail::get_pixel_background(const color& fill_color) -> cell<std::wstring> {
 	return cell<std::wstring>{
@@ -1163,13 +1087,11 @@ auto oof::detail::get_pixel_background(const color& fill_color) -> cell<std::wst
 	};
 }
 
-
 template<typename sequence_type>
 oof::detail::extender<sequence_type>::operator std::string() const {
 	const sequence_type& sequence = static_cast<const sequence_type&>(*this);
 	return get_string_from_sequence<std::string>(sequence);
 }
-
 
 template<typename sequence_type>
 oof::detail::extender<sequence_type>::operator std::wstring() const {
@@ -1177,13 +1099,11 @@ oof::detail::extender<sequence_type>::operator std::wstring() const {
 	return get_string_from_sequence<std::wstring>(sequence);
 }
 
-
 template<typename sequence_type>
 auto oof::detail::extender<sequence_type>::operator+(const std::string& other) const -> std::string {
 	const sequence_type& sequence = static_cast<const sequence_type&>(*this);
 	return std::string(sequence) + other;
 }
-
 
 template<typename sequence_type>
 auto oof::detail::extender<sequence_type>::operator+(const std::wstring& other) const -> std::wstring {
@@ -1191,8 +1111,7 @@ auto oof::detail::extender<sequence_type>::operator+(const std::wstring& other) 
 	return std::wstring(sequence) + other;
 }
 
-
-// This is just to mass-instantiate the extender functions by abusing std::visit 
+// This is just to mass-instantiate the extender functions by abusing std::visit
 auto impl_fun() -> void {
 	std::visit([](const auto& altern) {return altern + std::string{};  }, oof::sequence_variant_type{});
 	std::visit([](const auto& altern) {return altern + std::wstring{}; }, oof::sequence_variant_type{});
