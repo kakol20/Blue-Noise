@@ -28,7 +28,7 @@ namespace fpm {
 		constexpr inline fixed(BaseType val, raw_construct_tag) noexcept : m_value(val) {}
 
 	public:
-		inline fixed() noexcept {}
+		inline fixed() noexcept = default;
 
 		// Converts an integral number to the fixed-point type.
 		// Like static_cast, this truncates bits that don't fit.
