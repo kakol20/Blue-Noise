@@ -1,3 +1,6 @@
+#include <sstream>
+#include <string>
+
 #include "../misc/Random.h"
 
 #include "Vector3D.h"
@@ -12,7 +15,11 @@ Vector3D::Vector3D(const Fixed& x, const Fixed& y, const Fixed& z) {
 	m_withZAxis = true;
 }
 
-Vector3D::Vector3D(const Vector3D& copyVector) : Vector3D(copyVector.m_x, copyVector.m_y, copyVector.m_z) {
+Vector3D::Vector3D(const Vector3D& copyVector) {
+	m_x = copyVector.m_x;
+	m_y = copyVector.m_y;
+	m_z = copyVector.m_z;
+	m_withZAxis = copyVector.m_withZAxis;
 }
 
 Vector3D& Vector3D::operator*=(const Vector3D& otherVector) {
@@ -226,9 +233,42 @@ void Vector3D::WithZAxis(bool withZAxis) {
 	m_withZAxis = withZAxis;
 }
 
-std::ostream& operator<<(std::ostream& os, const Vector3D& otherVector) {
-	os << otherVector.m_x << "," << otherVector.m_y;
+std::istream& operator>>(std::istream& is, Vector3D& otherVector) {
+	std::vector<Fixed> values;
+	std::string r = "1";
+	std::getline(is, r);
 
-	if (otherVector.m_withZAxis) os << "," << otherVector.m_z;
+	std::istringstream iss(r);
+	std::string val;
+	while (std::getline(iss, val, ',')) {
+		values.push_back((Fixed::FlOrDo)std::stod(val));
+	}
+
+	otherVector.m_withZAxis = true;
+
+	if (values.size() == 2) {
+		otherVector.m_withZAxis = false;
+
+		otherVector.m_x = values[0];
+		otherVector.m_y = values[1];
+	}
+	else if (values.size() == 3) {
+		otherVector.m_withZAxis = true;
+
+		otherVector.m_x = values[0];
+		otherVector.m_y = values[1];
+		otherVector.m_z = values[2];
+	}
+	else {
+		otherVector = Vector3D(NAN);
+	}
+
+	return is;
+}
+
+std::ostream& operator<<(std::ostream& os, const Vector3D& otherVector) {
+	os << otherVector.m_x << ',' << otherVector.m_y;
+
+	if (otherVector.m_withZAxis) os << ',' << otherVector.m_z;
 	return os;
 }

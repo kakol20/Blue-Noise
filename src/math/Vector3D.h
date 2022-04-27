@@ -69,6 +69,7 @@ public:
 
 	// ----- friend FUNCTIONS -----
 
+	friend std::istream& operator>>(std::istream& is, Vector3D& otherVector);
 	friend std::ostream& operator<<(std::ostream& os, const Vector3D& otherVector);
 
 private:

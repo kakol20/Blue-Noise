@@ -11,7 +11,7 @@ public:
 	static auto EnableVTMode() -> void;
 
 	static void Reset();
-	static void Write(std::string& output);
+	static void Write(std::string output);
 };
 
 #endif // !FASTWRITE_H

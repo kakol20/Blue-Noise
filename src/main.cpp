@@ -114,6 +114,7 @@ int main() {
 			}
 		}
 
+		//furthestPoint.WithZAxis(false);
 		existingPoints.push_back(furthestPoint);
 
 		furthestPoint /= max;
@@ -152,19 +153,33 @@ int main() {
 
 		FastWrite::Write(output);
 	}
-	std::string sound = "\a";
-	FastWrite::Write(sound);
 
 #ifdef DO_MANY
 	blueNoise.Write("points_visual_many.png");
+
+	FastWrite::Write("\a");
+	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 #else
 	points.close();
-
+	FastWrite::Write("\n");
 	blueNoise.Write("points_visual.png");
+
+	int randomFromFile = Fixed::Ceil(Random::RandomFloat(0, pointCount)).ToInt();
+	points.open("points.txt", std::ios_base::in);
+	int count = 0;
+	Vector3D readVector(0);
+	while (count <= randomFromFile && !points.eof()) {
+		points >> readVector;
+		count++;
+	}
+
+	std::cout << "\nVector from line #" << randomFromFile << ": " << readVector << '\n';
+
+	system("pause");
+
 #endif // DO_MANY
-	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
 #endif // DO_NOISE
 
-	//system("pause");
 	return 0;
 }

@@ -37,7 +37,7 @@ void FastWrite::Reset() {
 	FastWrite::Write(output);
 }
 
-void FastWrite::Write(std::string& output) {
+void FastWrite::Write(std::string output) {
 	HANDLE const output_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	const auto char_count = static_cast<DWORD>(output.length());
 	WriteConsoleA(output_handle, output.c_str(), char_count, nullptr, nullptr);
