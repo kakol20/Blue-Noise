@@ -234,33 +234,34 @@ void Vector3D::WithZAxis(bool withZAxis) {
 }
 
 std::istream& operator>>(std::istream& is, Vector3D& otherVector) {
-	std::vector<Fixed> values;
-	std::string r = "1";
-	std::getline(is, r);
+	std::string value;
+	int count = 0;
 
-	std::istringstream iss(r);
-	std::string val;
-	while (std::getline(iss, val, ',')) {
-		values.push_back((Fixed::FlOrDo)std::stod(val));
+	std::string line;
+	std::getline(is, line);
+	std::stringstream line_ss(line);
+
+	while (std::getline(line_ss, value, ',')) {
+		if (!value.empty() || value != "\n") {
+			std::stringstream ss(value);
+
+			if (count == 0) ss >> otherVector.m_x;
+			if (count == 1) ss >> otherVector.m_y;
+			if (count == 2) ss >> otherVector.m_z;
+
+			count++;
+		}
 	}
 
 	otherVector.m_withZAxis = true;
 
-	if (values.size() == 2) {
+	if (count == 0 || count == 1) {
+		otherVector.m_x = NAN;
+		otherVector.m_y = NAN;
+		otherVector.m_z = NAN;
+	}
+	else if (count == 2) {
 		otherVector.m_withZAxis = false;
-
-		otherVector.m_x = values[0];
-		otherVector.m_y = values[1];
-	}
-	else if (values.size() == 3) {
-		otherVector.m_withZAxis = true;
-
-		otherVector.m_x = values[0];
-		otherVector.m_y = values[1];
-		otherVector.m_z = values[2];
-	}
-	else {
-		otherVector = Vector3D(NAN);
 	}
 
 	return is;
